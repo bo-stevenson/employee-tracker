@@ -1,7 +1,7 @@
 # Employee-Tracker
 
 ## Overview
-Program that utilizes a mySQL database to view and store various kinds of data for Employees.
+Program that utilizes a mySQL database to view and store data for Employees.
 
 ## Table of Contents
 
@@ -42,6 +42,7 @@ none
 ## Screenshots
 
 ![Screenshot](assets/images/screenshot.png)
+
 ## License
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
