@@ -110,7 +110,7 @@ function start() {
             break;
   
           case "Update Employee's Role":
-            updateEmployee();
+            updateRole();
             break;
 
           case "Exit":
@@ -277,7 +277,44 @@ function viewDepartments() {
     });
 };
 
-  
+  //function to remove a department
+  function removeDepartment() {
+    connection.query("SELECT * FROM department", function(err,results) {
+        if (err) throw err;
+       
+        inquirer
+        .prompt([
+            {
+                name: "removeDepartment",
+                type: "list",
+                choices: function() {
+                    let removeArray = [];
+                    for (let i = 0; i < results.length; i++) {
+                        removeArray.push(results[i].dept_name);
+                    }
+                    return removeArray;
+                },
+                message: "Which department would you like to remove?"
+            }
+        ])
+        .then(function(answer) {
+            let departId;
+            for (let i = 0; i < results.length; i++) {
+                if (results[i].dept_name === answer.removeDepartment) {
+                    departId = results[i].id;
+
+                    connection.query(
+                        "DELETE FROM department WHERE id = ?", departId, (err,res) => {
+                    if (err) throw err;
+                    console.log("Department has been successfully removed!");
+                    start();
+                    })
+                };
+            };
+        });
+    });
+};
+
 
 //array functions
 function roleArray() {
