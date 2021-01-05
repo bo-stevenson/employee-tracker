@@ -14,13 +14,13 @@ let connection = mysql.createConnection({
     database: "employee_tracker_db"
 });
 
-// connection to the mysql server
+// connect to the mysql server
 connection.connect(function(err) {
     if (err) throw err;
     init();
 });
 
-//init logo function
+//logo
 function init() {
     const logoText = logo
         ({
@@ -44,7 +44,8 @@ let rolesarray = [];
 let departmentsarray = [];
 let employeesarray = [];
 let managersarray = [];
-// start function
+
+
 function start() {
     //Run functions to make empty arrays at start
     roleArray();
@@ -114,17 +115,93 @@ function start() {
 
           case "Exit":
             connection.end();
-            break; 
-
+            break;
         }
     });
   }
 
 
+//function to view employees
+function viewEmployees() {
+    let query = 
+    "SELECT employee.id, employee.first_name, employee.last_name, role.title, role.salary, department.dept_name, CONCAT(e.first_name, ' ' ,e.last_name) AS Manager FROM employee INNER JOIN role on role.id = employee.role_id INNER JOIN department on department.id = role.department_id left join employee e on employee.manager_id = e.id;";
+    return connection.query(query, function (err, res) {
+       if (err) throw err;
+        console.table(res);
+        start();
+    });
+};
+
+//fucntion to add an employee
+function addEmployee() {
+    //Add this answer to manager question
+    managersarray.push('This Employee is a manager.');
+
+    inquirer
+    .prompt([
+        {
+            name: "firstname",
+            type: "input",
+            message: "What is the employee's first name?"
+        },
+        {
+            name: "lastname",
+            type: "input",
+            message: "What is the employee's last name?"
+        },
+        {
+            name: "employeeRole",
+            type: "list",
+            choices: rolesarray,
+            message: "What is the employee's role?"
+        },
+        {
+            name: "managerId",
+            type: "list",
+            choices: managersarray,
+            message: "Please choose the employees manager"
+        }
+    ])
+    .then(function(answer) {
+        if (answer.managerId === "This Employee is a manager.") {
+            answer.managerId = null;
+
+            connection.query(
+                "INSERT INTO employee SET ?",
+                {
+                    first_name: answer.firstname,
+                    last_name: answer.lastname,
+                    role_id: answer.employeeRole[0],
+                    manager_id: answer.managerId
+                },
+                function(err) {
+                    if (err) throw err;
+                    console.log("The employee has been added");
+                    start();
+                }
+            );
+        } else {
+            connection.query(
+                "INSERT INTO employee SET ?",
+                {
+                    first_name: answer.firstname,
+                    last_name: answer.lastname,
+                    role_id: answer.employeeRole[0],
+                    manager_id: answer.managerId[0]
+                },
+                function(err) {
+                    if (err) throw err;
+                    console.log("The employee has been added");
+                    start();
+                }
+            );
+        };
+    });
+};
 
 
 
-//array functions 
+//array functions
 function roleArray() {
     connection.query("SELECT * FROM role", (err, results) => {
         if (err) throw err;
