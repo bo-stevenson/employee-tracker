@@ -199,6 +199,46 @@ function addEmployee() {
     });
 };
 
+//function to remove employees
+function removeEmployee() {
+    connection.query("SELECT * FROM employee", function(err,results) {
+        if (err) throw err;
+       
+        inquirer
+        .prompt([
+            {
+                name: "removeNames",
+                type: "list",
+                choices: function() {
+                    let removeArray = [];
+                    for (let i = 0; i < results.length; i++) {
+                        removeArray.push(results[i].first_name + " " + results[i].last_name);
+                    }
+                    return removeArray;
+                },
+                message: "Which employee would you like to remove?"
+            }
+        ])
+        .then(function(answer) {
+            let employee_id;
+            for (let i = 0; i < results.length; i++) {
+               if (results[i].first_name + " " + results[i].last_name === answer.removeNames) {
+                employee_id = results[i].id;
+                console.log("This is the emp ID " + employee_id);
+                let query = employee_id
+                    connection.query("DELETE FROM employee WHERE employee.id = ?", query, (err,res) => {
+                    if (err) throw err;
+                    console.log("Employee has been removed!");
+                    start();
+                    })
+                };
+            };
+        });
+    });
+};
+
+
+
 
 
 //array functions
