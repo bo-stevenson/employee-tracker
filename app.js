@@ -14,7 +14,7 @@ let connection = mysql.createConnection({
     database: "employee_tracker_db"
 });
 
-// connect to the mysql server
+// connection to the mysql server
 connection.connect(function(err) {
     if (err) throw err;
     init();
@@ -44,7 +44,7 @@ let rolesarray = [];
 let departmentsarray = [];
 let employeesarray = [];
 let managersarray = [];
-
+// start function
 function start() {
     //Run functions to make empty arrays at start
     roleArray();
@@ -114,7 +114,8 @@ function start() {
 
           case "Exit":
             connection.end();
-            break;
+            break; 
+
         }
     });
   }
@@ -123,7 +124,7 @@ function start() {
 
 
 
-//array functions
+//array functions 
 function roleArray() {
     connection.query("SELECT * FROM role", (err, results) => {
         if (err) throw err;
