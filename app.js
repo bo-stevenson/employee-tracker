@@ -25,7 +25,6 @@ function init() {
     const logoText = logo
         ({
         name: "Employee Management System",
-        font: "Colossal",
         fontSize: "5px",
         borderColor: "black",
         logoColor: "red",
