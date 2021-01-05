@@ -20,7 +20,7 @@ connection.connect(function(err) {
     init();
 });
 
-//logo
+//init logo function
 function init() {
     const logoText = logo
         ({
@@ -44,7 +44,6 @@ let rolesarray = [];
 let departmentsarray = [];
 let employeesarray = [];
 let managersarray = [];
-
 
 function start() {
     //Run functions to make empty arrays at start
@@ -119,6 +118,7 @@ function start() {
         }
     });
   }
+
 
 
 
