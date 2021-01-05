@@ -315,6 +315,61 @@ function viewDepartments() {
     });
 };
 
+//add a role
+function addRole() {
+    inquirer
+    .prompt([
+        {
+            name: "title",
+            type: "input",
+            message: "What is the role you would like added?"
+        },
+        {
+            name: "salary",
+            type: "input",
+            message: "What is this role's salary?"
+        },
+        {
+            name: "department",
+            type: "list",
+            choices: departmentsarray,
+            message: "Please select which department this role belongs to"
+        }
+    ])
+    .then(function(answer) {
+        if (answer.salary === isNaN) {
+            console.log("You must enter a valid number")
+        } else {
+            connection.query(
+                "INSERT INTO role SET ?",
+                {
+                   title: answer.title,
+                   salary: answer.salary,
+                   department_id: answer.department[0]
+                },
+                function(err) {
+                    if (err) throw err;
+                    console.log("The role was added");
+                    start();
+                }
+            );
+        };
+    });
+};
+
+//view all roles
+function viewRoles() {
+    console.log("View All Roles Test")
+    let query =
+    "SELECT role.id, role.title, role.salary, role.department_id FROM role";
+    return connection.query(query, function (err, res) {
+        if (err) throw err;
+        console.table(res);
+        start()
+    })
+};
+
+
 
 //array functions
 function roleArray() {
