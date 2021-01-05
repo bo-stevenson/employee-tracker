@@ -228,7 +228,7 @@ function removeEmployee() {
                 let query = employee_id
                     connection.query("DELETE FROM employee WHERE employee.id = ?", query, (err,res) => {
                     if (err) throw err;
-                    console.log("Employee has been removed!");
+                    console.log("Employee has been removed");
                     start();
                     })
                 };
@@ -240,6 +240,44 @@ function removeEmployee() {
 
 
 
+//function to add a department
+function addDepartment() {
+    inquirer
+    .prompt([
+        {
+            name: "deptName",
+            type: "input",
+            message: "What would you like added to the department list?"
+        }
+    ])
+    .then(function(answer) {
+        connection.query(
+            "INSERT INTO department SET ?",
+            {
+                dept_name: answer.deptName
+            },
+            function(err) {
+                if (err) throw err;
+                console.log("The department has been added");
+                start();
+            }
+        );
+    });
+};
+
+//function for viewing all departments
+function viewDepartments() {
+    
+    let query =
+    "SELECT department.id, department.dept_name FROM department";
+    return connection.query(query, function (err, res) {
+        if (err) throw err;
+        console.table(res);
+        start();
+    });
+};
+
+  
 
 //array functions
 function roleArray() {
