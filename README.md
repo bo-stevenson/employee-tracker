@@ -41,7 +41,7 @@ none
 
 ## Screenshots
 
-![Screenshot](assets/images/screenshot.png)
+![Screenshot](assets/screenshot.png)
 
 ## License
 
