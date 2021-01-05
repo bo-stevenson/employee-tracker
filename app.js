@@ -369,7 +369,111 @@ function viewRoles() {
     })
 };
 
+//update roles
+function updateRole() {
+    connection.query("SELECT employee.id, employee.first_name, employee.last_name, employee.role_id FROM employee", function(err,results) {
+        if (err) throw err;
+       
+        inquirer
+        .prompt([
+            {
+                name: "empNames",
+                type: "list",
+                choices: function() {
+                    let empArray = [];
+                    for (let i = 0; i < results.length; i++) {
+                        empArray.push(results[i].first_name + " " + results[i].last_name);
+                    }
+                    return empArray;
+                },
+                message: "Which employee would you like to update the role for?"
+            },
+        ])
+        .then(function(answer) {
+            let employee_id;
+            for (let i = 0; i < results.length; i++) {
+                if (results[i].first_name + " " + results[i].last_name === answer.empNames) {
+                employee_id = results[i].id;
+                console.log("This is the emp ID " + employee_id);
+                };
+            };
+      
+            connection.query("SELECT * FROM role", function(err,results) {
+                if (err) throw (err);
+      
+                inquirer
+                .prompt([
+                    {
+                        name: "roles",
+                        type: "list",
+                        choices: function() {
+                            let roleArray = [];
+                            for (let i = 0; i < results.length; i++) {
+                                roleArray.push(results[i].title);
+                            }
+                            return roleArray;
+                        },
+                        message: "Please select a role to update the employee to:"
+                    }
+                ])
+                .then(function(answer) {
+                    let role_id;
+                    for (let i = 0; i < results.length; i++) {
+                        if (results[i].title === answer.roles) {
+                            role_id = results[i].id;
+                            console.log ("This is the role id " + role_id);
+                        }
+                    }
 
+                    let queryAnswer = [role_id, employee_id]
+                    connection.query("UPDATE employee SET role_id = ? WHERE employee.id = ?", queryAnswer, (err, res) => {
+                        if (err) throw err;
+                        console.log("Employee was updated");
+                        start();
+                    });
+                });
+            });
+        });
+    });
+};
+
+//remove role function
+function removeRole() {
+    connection.query("SELECT * FROM role", function(err,results) {
+        if (err) throw err;
+       
+        inquirer
+        .prompt([
+            {
+                name: "removeRoles",
+                type: "list",
+                choices: function() {
+                    let removeArray = [];
+                    for (let i = 0; i < results.length; i++) {
+                        removeArray.push(results[i].title);
+                    }
+                    return removeArray;
+                },
+                message: "Which role would you like to remove?"
+            }
+        ])
+            .then(function(answer) {
+                let role_id;
+                for (let i = 0; i < results.length; i++) {
+                    if (results[i].title === answer.removeRoles) {
+                    role_id = results[i].id;
+
+                    let query = role_id;
+                    connection.query("DELETE FROM role WHERE role.id = ?", query, (err,res) => {
+                    if (err) throw err;
+                    console.log("Role has been removed");
+                    start();
+                    })
+                };
+            };
+        });
+    });
+};
 
 //array functions
 function roleArray() {
